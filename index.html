@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+
+.wrap {
+  width: 100%;
+  height: 110px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.player {
+  height: 100%;
+  border-radius: 24px;
+  background: rgba(255, 220, 235, 0.45);
+  border: 2px solid #ffb7cf;
+  box-shadow: 0 12px 28px rgba(255, 170, 200, 0.35);
+  overflow: hidden;
+}
+
+.titlebar {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.4));
+  border-bottom: 1px solid rgba(255,183,207,0.8);
+  font-size: 13px;
+  font-weight: 700;
+  color: #d86a90;
+}
+
+.content {
+  height: calc(100% - 34px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  box-sizing: border-box;
+}
+
+button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(180deg, #ffd1e2, #ff8fb7);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(255,143,183,0.4);
+}
+
+.meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.track {
+  font-size: 13px;
+  font-weight: 800;
+  color: #d86a90;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sub {
+  font-size: 11px;
+  color: rgba(216,106,144,0.7);
+}
+
+.wave {
+  margin-top: 6px;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.5),
+    rgba(255,180,210,0.8),
+    rgba(255,255,255,0.5)
+  );
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="player">
+    <div class="titlebar">🎧 오늘의 BGM</div>
+
+    <div class="content">
+      <button id="btn" type="button">▶</button>
+
+      <div class="meta">
+        <div class="track">Dreams Dreams · Located Link Mix</div>
+        <div class="sub">dreamy instrumental</div>
+        <div class="wave"></div>
+      </div>
+
+      <audio id="audio" src="https://www.dropbox.com/scl/fi/9dqn8nwvrtqfrmncy9hp3/Dreams-Dreams-Located-Link-Mix-Instrumental-.mp3-SoundLoadMate.com.mp3?rlkey=f3hawcbobvzo5mb9bn7vkhn29&raw=1"></audio>
+    </div>
+  </div>
+</div>
+
+<script>
+const audio = document.getElementById("audio");
+const btn = document.getElementById("btn");
+
+btn.addEventListener("click", async () => {
+  try {
+    if (audio.paused) {
+      await audio.play();
+      btn.textContent = "❚❚";
+    } else {
+      audio.pause();
+      btn.textContent = "▶";
+    }
+  } catch (e) {
+    console.log(e);
+  }
+});
+</script>
+</body>
+</html>
