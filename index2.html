@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+}
+
+/* 전체 래퍼 */
+.wrap {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* 카드 */
+.clock-card {
+  height: 100%;
+  border-radius: 26px;
+  background: rgba(255, 220, 235, 0.45);
+  border: 2px solid #ffb7cf;
+  box-shadow: 0 12px 28px rgba(255, 170, 200, 0.35);
+  overflow: hidden;
+}
+
+/* 상단바 */
+.titlebar {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.4));
+  border-bottom: 1px solid rgba(255,183,207,0.8);
+  font-size: 13px;
+  font-weight: 700;
+  color: #d86a90;
+  letter-spacing: 1px;
+}
+
+/* 내용 */
+.content {
+  height: calc(100% - 34px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 날짜 */
+.date {
+  font-size: 12px;
+  color: rgba(216,106,144,0.75);
+  letter-spacing: 1px;
+}
+
+/* 시간 (픽셀 느낌) */
+.time {
+  font-family: "Courier New", monospace;
+  font-size: 42px;
+  font-weight: 700;
+  color: #7a7a7a;
+  background: rgba(255,255,255,0.65);
+  padding: 6px 14px;
+  border-radius: 16px;
+  letter-spacing: 2px;
+}
+
+/* AM / PM */
+.ampm {
+  font-size: 12px;
+  color: #d86a90;
+  letter-spacing: 1px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="clock-card">
+    <div class="titlebar">today is</div>
+
+    <div class="content">
+      <div class="date" id="date"></div>
+      <div class="time" id="time"></div>
+      <div class="ampm" id="ampm"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateClock() {
+  const now = new Date();
+
+  const days = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+
+  let hours = now.getHours();
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  hours = String(hours).padStart(2, "0");
+
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const date = String(now.getDate()).padStart(2, "0");
+  const day = days[now.getDay()];
+
+  document.getElementById("time").textContent = `${hours} ${minutes}`;
+  document.getElementById("ampm").textContent = ampm;
+  document.getElementById("date").textContent = `${month}.${date} ${day}`;
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
