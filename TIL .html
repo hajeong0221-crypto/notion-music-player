@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TIL Widget</title>
+  <style>
+    :root{
+      --bg1:#ffe6f1;
+      --bg2:#ffd2e6;
+      --card:#ffffffd6;
+      --text:#222;
+      --muted:#6b6b6b;
+      --hot:#ff4ea3;
+      --shadow: 0 16px 40px rgba(255,105,180,.18);
+    }
+
+    html, body { height:100%; }
+    body{
+      margin:0;
+      display:grid;
+      place-items:center;
+      background:transparent;
+      font-family: system-ui, -apple-system, "Apple SD Gothic Neo",
+                   "Noto Sans KR", "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .frame{
+      width:360px;
+      height:170px;
+      padding:14px;
+      border-radius:22px;
+      background: radial-gradient(120% 120% at 15% 0%,
+        var(--bg1), var(--bg2) 55%, #ffc0dd);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* subtle grain */
+    .frame::before{
+      content:"";
+      position:absolute; inset:-20px;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      mix-blend-mode:soft-light;
+      opacity:.3;
+      pointer-events:none;
+    }
+
+    .card{
+      height:100%;
+      padding:12px;
+      border-radius:18px;
+      background:var(--card);
+      border:1.5px solid rgba(255,255,255,.75);
+      backdrop-filter: blur(10px);
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:10px;
+    }
+
+    .title{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight:800;
+      letter-spacing:.4px;
+      color:var(--text);
+    }
+
+    .icon{
+      width:26px;
+      height:26px;
+      border-radius:10px;
+      background:rgba(255,255,255,.9);
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.95);
+      box-shadow:0 8px 18px rgba(255,105,180,.14);
+    }
+
+    .date{
+      font-size:12px;
+      font-weight:700;
+      color:var(--muted);
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.6);
+      border:1px solid rgba(255,255,255,.75);
+    }
+
+    .rows{
+      display:grid;
+      gap:8px;
+    }
+
+    .row{
+      min-height:38px;
+      padding:10px;
+      border-radius:14px;
+      background:rgba(255,255,255,.6);
+      border:1px solid rgba(255,255,255,.75);
+    }
+
+    .sparkles{
+      position:absolute;
+      right:14px;
+      bottom:12px;
+      font-size:12px;
+      color:var(--hot);
+      opacity:.55;
+      user-select:none;
+    }
+
+    @media (max-width:420px){
+      .frame{ width:320px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="card">
+      <div class="top">
+        <div class="title">
+          <div class="icon">💡</div>
+          <div>TIL</div>
+        </div>
+        <div class="date" id="today"></div>
+      </div>
+
+      <!-- 비워진 영역 -->
+      <div class="rows">
+        <div class="row"></div>
+        <div class="row"></div>
+      </div>
+
+      <div class="sparkles">✦ ✧ ✦</div>
+    </div>
+  </div>
+
+  <script>
+    // 날짜만 표시
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const dd = String(d.getDate()).padStart(2,'0');
+    document.getElementById("today").textContent = `${yyyy}.${mm}.${dd}`;
+  </script>
+</body>
+</html>
