@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Mint LCD Clock</title>
+
+  <style>
+    :root{
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+              "Apple SD Gothic Neo","Noto Sans KR", Arial, sans-serif;
+
+      /* 민트 LCD */
+      --bg: #f6fbf8;
+      --frame: rgba(255,255,255,.92);
+      --frame-border: rgba(0,0,0,.10);
+      --shadow: 0 12px 30px rgba(0,0,0,.08);
+
+      --lcd: #b7cfc8;
+      --lcd-border: rgba(0,0,0,.12);
+      --digits: rgba(16, 24, 24, .72);
+      --muted: rgba(16, 24, 24, .60);
+
+      --radius: 22px;
+      --pad: clamp(14px, 2.6vw, 18px);
+    }
+
+    [data-theme="black"]{
+      --bg: #0b0b0c;
+      --frame: rgba(18,18,20,.92);
+      --frame-border: rgba(255,255,255,.14);
+      --shadow: 0 16px 40px rgba(0,0,0,.45);
+
+      --lcd: #a7c7bf;
+      --lcd-border: rgba(255,255,255,.12);
+      --digits: rgba(10, 14, 14, .78);
+      --muted: rgba(244,244,246,.62);
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; margin:0; }
+    body{
+      font-family: var(--font);
+      background: var(--bg);
+      display:grid;
+      place-items:center;
+      padding: 10px;
+    }
+
+    /* 노션 임베드 안정 */
+    .wrap{
+      width: min(560px, 100%);
+      min-width: 240px;
+    }
+
+    .frame{
+      width: 100%;
+      border-radius: var(--radius);
+      background: var(--frame);
+      border: 1px solid var(--frame-border);
+      box-shadow: var(--shadow);
+      padding: var(--pad);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      overflow:hidden;
+    }
+
+    .left{
+      min-width: 0;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+    }
+
+    .title{
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--muted);
+      line-height: 1;
+    }
+
+    .lcd{
+      border-radius: 16px;
+      background: var(--lcd);
+      border: 1px solid var(--lcd-border);
+      padding: clamp(14px, 3vw, 18px) clamp(16px, 3.2vw, 22px);
+      display:inline-flex;
+      align-items:baseline;
+      gap: 10px;
+      max-width: 100%;
+      overflow:hidden;
+    }
+
+    .time{
+      font-size: clamp(34px, 7vw, 56px);
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: var(--digits);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .suffix{
+      font-size: clamp(12px, 2.4vw, 14px);
+      font-weight: 800;
+      color: rgba(16,24,24,.60);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.35);
+      border: 1px solid rgba(0,0,0,.08);
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    [data-theme="black"] .suffix{
+      color: rgba(10,14,14,.78);
+      background: rgba(255,255,255,.22);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .meta{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      color: var(--muted);
+      font-size: clamp(12px, 2.2vw, 14px);
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .badge{
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid var(--frame-border);
+      color: var(--muted);
+      background: rgba(0,0,0,.03);
+      white-space: nowrap;
+    }
+
+    [data-theme="black"] .badge{
+      background: rgba(255,255,255,.06);
+      color: rgba(244,244,246,.70);
+    }
+
+    /* 폭 줄면 자동 숨김 (깨짐 방지) */
+    @media (max-width: 380px){
+      .badge{ display:none; }
+    }
+    @media (max-width: 330px){
+      .suffix{ display:none; }
+    }
+  </style>
+</head>
+
+<body data-theme="mint">
+  <div class="wrap">
+    <div class="frame" role="group" aria-label="Mint LCD Clock">
+      <div class="left">
+
+        <!-- 🍏 여기! TEAM CLOCK → 사과 -->
+        <div class="title">🍏</div>
+
+        <div class="lcd">
+          <div class="time" id="time">00:00</div>
+          <div class="suffix" id="suffix">PM</div>
+        </div>
+
+        <div class="meta">
+          <span id="date">0000-00-00 (월)</span>
+          <span aria-hidden="true">•</span>
+          <span id="tz">KST</span>
+        </div>
+      </div>
+
+      <div class="badge" id="mode">MINUTES</div>
+    </div>
+  </div>
+
+  <script>
+    const format24 = false;   // true로 바꾸면 24시간
+    const showSeconds = false;
+
+    const $time = document.getElementById("time");
+    const $suffix = document.getElementById("suffix");
+    const $date = document.getElementById("date");
+    const $mode = document.getElementById("mode");
+
+    const days = ["일","월","화","수","목","금","토"];
+    const pad = n => String(n).padStart(2,"0");
+
+    function tick(){
+      const now = new Date();
+
+      const yyyy = now.getFullYear();
+      const mo = pad(now.getMonth()+1);
+      const dd = pad(now.getDate());
+      const day = days[now.getDay()];
+      $date.textContent = `${yyyy}-${mo}-${dd} (${day})`;
+
+      let h = now.getHours();
+      let suffix = h >= 12 ? "PM" : "AM";
+      let hh = h;
+
+      if (!format24){
+        hh = h % 12;
+        if (hh === 0) hh = 12;
+      }
+
+      const mm = pad(now.getMinutes());
+      const ss = pad(now.getSeconds());
+
+      $time.textContent = showSeconds ? `${pad(hh)}:${mm}:${ss}` : `${pad(hh)}:${mm}`;
+      $suffix.textContent = format24 ? "24H" : suffix;
+      $mode.textContent = showSeconds ? "SECONDS" : "MINUTES";
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
