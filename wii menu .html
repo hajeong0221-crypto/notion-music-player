@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Wii 특유의 몽글몽글하고 깨끗한 배경 */
+        body {
+            background: radial-gradient(circle, #ffffff 0%, #eef7ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        /* 닌텐도 위 채널 격자 레이아웃 */
+        .wii-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2열 배치 */
+            gap: 20px;
+            perspective: 1000px;
+        }
+
+        .channel {
+            width: 160px;
+            height: 110px;
+            background: linear-gradient(180deg, #ffffff 0%, #f5faff 100%);
+            border: 3px solid #d0e8ff;
+            border-radius: 28px; /* 둥글둥글한 모서리 */
+            box-shadow: 4px 4px 15px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 프루티거 에어로 스타일 고광택 유리 효과 */
+        .channel::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 50%;
+            background: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0));
+            pointer-events: none;
+        }
+
+        /* 호버 시 Wii 포인터 강조 효과 */
+        .channel:hover {
+            transform: scale(1.1);
+            border-color: #00a2ff;
+            box-shadow: 0 0 25px rgba(0, 162, 255, 0.5);
+            background: #ffffff;
+        }
+
+        .icon { font-size: 38px; z-index: 1; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1)); }
+        .label { font-size: 13px; font-weight: bold; color: #5aa9e6; margin-top: 8px; z-index: 1; letter-spacing: 0.5px; }
+
+        /* 하단 바 */
+        .wii-footer {
+            position: fixed;
+            bottom: 30px;
+            font-size: 14px;
+            color: #b0d4f1;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="hoverSound" src="https://www.soundjay.com/buttons/sounds/button-20.mp3" preload="auto"></audio>
+
+    <div class="wii-grid">
+        <a href="https://www.notion.so/30fa0dcff5dc80bcb682c7956e03af98" target="_blank" class="channel" onmouseenter="playAudio()">
+            <div class="icon">✈️</div>
+            <div class="label">홍콩</div>
+        </a>
+        <a href="#" target="_blank" class="channel" onmouseenter="playAudio()">
+            <div class="icon">🏨</div>
+            <div class="label">HOTEL</div>
+        </a>
+        <a href="#" target="_blank" class="channel" onmouseenter="playAudio()">
+            <div class="icon">🥢</div>
+            <div class="label">FOOD</div>
+        </a>
+        <a href="#" target="_blank" class="channel" onmouseenter="playAudio()">
+            <div class="icon">📸</div>
+            <div class="label">MOMENTS</div>
+        </a>
+    </div>
+
+    <div class="wii-footer">Wii Menu</div>
+
+    <script>
+        const audio = document.getElementById("hoverSound");
+        function playAudio() {
+            audio.currentTime = 0; 
+            audio.play().catch(e => {});
+        }
+    </script>
+
+</body>
+</html>
